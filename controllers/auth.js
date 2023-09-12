@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 import cookieParser from "cookie-parser";
 
-cookieParser;
 export const register = async (req, res, next) => {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(req.body.password, salt);
