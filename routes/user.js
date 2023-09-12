@@ -24,14 +24,14 @@ router.get("/checkadmin/:id", verifyAdmin, (req, res, next) => {
 });
 
 // UPDATE
-router.put("/:id", updateUser);
+router.put("/:id", verifyUser, updateUser);
 
 // DELETE
-router.delete("/:id", deleteUser);
+router.delete("/:id", verifyUser, deleteUser);
 
 // GET
-router.get("/:id", specificUser);
+router.get("/:id", verifyUser, specificUser);
 
 // GET ALL
-router.get("/", AllUser);
+router.get("/", verifyAdmin, AllUser);
 export default router;
