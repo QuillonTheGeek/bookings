@@ -1,6 +1,8 @@
+import useFetch from "../../hooks/useFetch";
 import "./FeaturedProps.css";
 
 const FeaturedProps = () => {
+  const{data, loading, error}= useFetch("/api/")
   return (
     <div className="fp">
       <div className="fpItem">

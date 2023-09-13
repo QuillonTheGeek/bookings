@@ -82,7 +82,11 @@ export const countByType = async (req, res, next) => {
 //  GET ALL HOTEL
 export const AllHotel = async (req, res, next) => {
   try {
-    const AllHotel = await Hotel.find();
+    // const AllHotel = await Hotel.find();
+
+    const AllHotel = await Hotel.find({ featured: req.query.featured }).limit(
+      req.query.limit
+    );
     res.status(200).json(AllHotel);
   } catch (err) {
     next(err);
