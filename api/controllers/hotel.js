@@ -81,14 +81,25 @@ export const countByType = async (req, res, next) => {
 };
 //  GET ALL HOTEL
 export const AllHotel = async (req, res, next) => {
+  const { min, max, limit, ...others } = req.query;
   try {
     // const AllHotel = await Hotel.find();
-
-    const AllHotel = await Hotel.find({ featured: req.query.featured }).limit(
-      req.query.limit
-    );
+    // const AllHotel = await Hotel.find({ featured: req.query.featured }).limit(
+    //   req.query.limit
+    // );
+    const AllHotel = await Hotel.find({
+      ...others,
+      cheapestPrice: { $gt: min || 1, $lt: max || 10000 },
+    });
     res.status(200).json(AllHotel);
+    if (AllHotel.length === 0) {
+      // Handle the case when no hotels match the criteria.
+      return res
+        .status(404)
+        .json({ message: "No hotels found matching the criteria." });
+    }
   } catch (err) {
+    console.error("Error:", err);
     next(err);
   }
 };
