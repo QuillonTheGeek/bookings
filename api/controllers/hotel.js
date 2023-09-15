@@ -89,15 +89,9 @@ export const AllHotel = async (req, res, next) => {
     // );
     const AllHotel = await Hotel.find({
       ...others,
-      cheapestPrice: { $gt: min || 1, $lt: max || 10000 },
+      cheapestPrice: { $gte: min || 1, $lte: max || 10000 },
     });
     res.status(200).json(AllHotel);
-    if (AllHotel.length === 0) {
-      // Handle the case when no hotels match the criteria.
-      return res
-        .status(404)
-        .json({ message: "No hotels found matching the criteria." });
-    }
   } catch (err) {
     console.error("Error:", err);
     next(err);

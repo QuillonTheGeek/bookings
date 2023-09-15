@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
-app.use("/api/hotel", hotelRoute);
+app.use("/api/hotels", hotelRoute);
 app.use("/api/rooms", roomsRoute);
 
 app.use((err, req, res, next) => {
