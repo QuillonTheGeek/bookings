@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import "./Login.css";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -10,9 +10,9 @@ const Login = () => {
     password: undefined,
   });
 
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const { loading, error, dispatch } = useContext(AuthContext);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -24,12 +24,12 @@ const Login = () => {
     try {
       const res = await axios.post("/api/auth/login", credentials);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-  navigate("/")
+      navigate("/");
     } catch (err) {
       dispatch({ type: "LOGIN_FAILED", payload: err.response.data });
     }
   };
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="login">
