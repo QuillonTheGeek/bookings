@@ -81,14 +81,18 @@ export const countByType = async (req, res, next) => {
 };
 //  GET ALL HOTEL
 export const AllHotel = async (req, res, next) => {
-  const { min, max, limit, ...others } = req.query;
+  const { min, max, limit, city, ...others } = req.query;
   try {
     // const AllHotel = await Hotel.find();
     // const AllHotel = await Hotel.find({ featured: req.query.featured }).limit(
     //   req.query.limit
     // );
+    const escapedInput = city?.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escapedInput, "i");
+
     const AllHotel = await Hotel.find({
       ...others,
+      city: city ? regex : undefined,
       cheapestPrice: { $gte: min || 1, $lte: max || 10000 },
     });
     res.status(200).json(AllHotel);

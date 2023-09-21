@@ -15,7 +15,7 @@ const FeaturedProps = () => {
         <>
           {data.map((item) => {
             return (
-              <div className="fpItem" key={item._isd}>
+              <div className="fpItem" key={item._id}>
                 <img
                   src="https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg"
                   alt=""

@@ -10,9 +10,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { useLocation } from "react-router-dom";
+// import { SearchContext } from "../../context/SearchContext";
+import { SearchContext } from "./../../context/SearchContext";
 
 const Hotel = () => {
   // const photos = [
@@ -55,9 +57,26 @@ const Hotel = () => {
   };
   const location = useLocation();
   // console.log(location);
+  
   const id = location.pathname.split("/")[2];
   const { data, loading, error, reFetch } = useFetch(`/api/hotels/find/${id}`);
 
+  // SEARCH CONTEXT to USE DATE
+  const { dates, options } = useContext(SearchContext);
+  // console.log("Dates:", dates);
+  // console.log("endDate:", dates[0]?.endDate);
+  // console.log("startDate:", dates[0]?.startDate);
+  // console.log("Dates array length:", dates.length);
+
+
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1, date2) {
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+  const days = dayDifference(dates[0].endDate, dates[0].startDate);
+  console.log(days);
   return (
     <div>
       <Navbar />
@@ -141,13 +160,14 @@ const Hotel = () => {
                 </p>
               </div>
               <div className="hotelDetailPrice">
-                <h1>Perfect for a 8-night stay!</h1>
+                <h1>Perfect for a {days}-night stay!</h1>
                 <span>
                   Located in Magodo, Ikosi.Lagos , this resort has a 9.1
                   excellent location score
                 </span>
                 <h2>
-                  <b>$1254.97</b>(9 nights)
+                  <b>${days * data.cheapestPrice * options.room}</b>({days}{" "}
+                  nights)
                 </h2>
                 <button>Reserve or Book now</button>
               </div>

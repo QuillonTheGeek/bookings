@@ -12,7 +12,7 @@ const INITIAL_STATE = {
 export const SearchContext = createContext(INITIAL_STATE);
 const SearchReducer = (state, action) => {
   switch (action.type) {
-    case "NEW SEARCH":
+    case "NEW_SEARCH":
       return action.payload;
     case "RESET SEARCH":
       return INITIAL_STATE;
@@ -26,7 +26,7 @@ export const SearchContextProvider = ({ children }) => {
   return (
     <SearchContext.Provider
       value={{
-        city: city,
+        city: state.city,
         dates: state.dates,
         options: state.options,
         dispatch,
