@@ -1,36 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "./Reserve.css";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import useFetch from "./../../hooks/useFetch";
+
+import "./reserve.css";
+import useFetch from "../../hooks/useFetch";
 import { useContext, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Reserve = ({ setOpen, hotelId }) => {
-  const { data, loading, error } = useFetch(`/api/hotels/room/${hotelId}`);
-  // console.log(data);
-
-  // /SELECT A ROOM
   const [selectedRooms, setSelectedRooms] = useState([]);
-  const handleSelect = (e) => {
-    const checked = e.target.checked;
-    const value = e.target.value;
-    setSelectedRooms(
-      checked
-        ? [...selectedRooms, value]
-        : selectedRooms.filter((item) => item !== value)
-    );
-  };
-
-  // console.log(selectedRooms);
-
-  // RESERVE
+  const { data, loading, error } = useFetch(`/api/hotels/room/${hotelId}`);
   const { dates } = useContext(SearchContext);
 
   const getDatesInRange = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
+
     const date = new Date(start.getTime());
 
     const dates = [];
@@ -39,8 +25,10 @@ const Reserve = ({ setOpen, hotelId }) => {
       dates.push(new Date(date).getTime());
       date.setDate(date.getDate() + 1);
     }
+
     return dates;
   };
+
   const alldates = getDatesInRange(dates[0].startDate, dates[0].endDate);
 
   const isAvailable = (roomNumber) => {
@@ -51,7 +39,18 @@ const Reserve = ({ setOpen, hotelId }) => {
     return !isFound;
   };
 
+  const handleSelect = (e) => {
+    const checked = e.target.checked;
+    const value = e.target.value;
+    setSelectedRooms(
+      checked
+        ? [...selectedRooms, value]
+        : selectedRooms.filter((item) => item !== value)
+    );
+  };
+
   const navigate = useNavigate();
+
   const handleClick = async () => {
     try {
       await Promise.all(
@@ -59,15 +58,12 @@ const Reserve = ({ setOpen, hotelId }) => {
           const res = axios.put(`/api/rooms/availability/${roomId}`, {
             dates: alldates,
           });
-          // console.log(res);
           return res.data;
         })
       );
-           setOpen(false);
-           navigate("/");
-    } catch (err) {
-    
-    }
+      setOpen(false);
+      navigate("/");
+    } catch (err) {}
   };
   return (
     <div className="reserve">
@@ -77,20 +73,20 @@ const Reserve = ({ setOpen, hotelId }) => {
           className="rClose"
           onClick={() => setOpen(false)}
         />
-        <span>Select Your Rooms</span>
+        <span>Select your rooms:</span>
         {data.map((item) => (
-          <div className="rItem" key={item.id}>
-            <div className="rInfo">
+          <div className="rItem" key={item._id}>
+            <div className="rItemInfo">
               <div className="rTitle">{item.title}</div>
               <div className="rDesc">{item.desc}</div>
               <div className="rMax">
-                Max People: <b>{item.maxPeople}</b>
+                Max people: <b>{item.maxPeople}</b>
               </div>
               <div className="rPrice">{item.price}</div>
             </div>
             <div className="rSelectRooms">
               {item.roomNumbers.map((roomNumber) => (
-                <div className="room" key={roomNumber._id}>
+                <div className="room">
                   <label>{roomNumber.number}</label>
                   <input
                     type="checkbox"
@@ -103,7 +99,7 @@ const Reserve = ({ setOpen, hotelId }) => {
             </div>
           </div>
         ))}
-        <button className="rButton" onClick={handleClick}>
+        <button onClick={handleClick} className="rButton">
           Reserve Now!
         </button>
       </div>
